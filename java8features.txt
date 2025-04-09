@@ -1,0 +1,8 @@
+Features of java from java 8 to jdk 15:
+Java 8: Streams,Optional,lambda, functional interfaces
+Java 9: Jshell for executing java code as javascript in shell and factory methods for immutable collection such as Arrays.asList() and List.of() for creating list...etc
+Java 10: var keyword to initialise any type of object
+Java 12: new type of switch with lambda came in java 12
+Java 13: multiline string such as taking json format in form of string
+Java 14:Record keyword used to remove boiler plate code in pojo so that it can inbuilt provide getters setters equals and hashcode, constructor and instance of can create a variable there itself to access any object instead of conversions
+Java 15:Sealed keyword which restricts it's implementation to particular classes itself

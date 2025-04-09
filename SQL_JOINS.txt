@@ -1,0 +1,262 @@
+MYSQL:
+=======
+Create a database:
+-------------------
+create database demodb;
+
+to use that db:
+----------------
+use demodb;
+
+to create a table:
+------------------
+create table products(
+product_id int,
+product_name varchar(50),
+quantity int,
+price float);
+
+to add new column with default date:
+--------------------------------------
+Alter table products add column product_date date default (CURRENT_DATE);
+ 
+to add new column with default date and time:
+---------------------------------------------
+ALTER TABLE products MODIFY COLUMN product_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+to add new column with default int value:
+------------------------------------------
+alter table products add column age int default 30;
+
+to insert into table:
+---------------------
+Insert into products(product_id,product_name,quantity,price) values(1,'Pencil',2,10.5);
+Insert into products(product_id,product_name,quantity,price) values(1,'Eraser',2,5.2);
+
+to drop a column:
+-----------------
+ALTER TABLE products drop column product_date;
+
+to rename a column name:
+------------------------
+Alter table products rename column product_date2 to product_date;
+
+to insert date into table:
+---------------------------
+STR_TO_DATE is used to insert our specified date format to MYSQL like STR_TO_DATE('12-10-2023','%d-%m-%Y')
+INSERT INTO products (product_id, product_name, quantity, price, product_date, age) 
+VALUES (1, 'Eraser', 2, 5.2, STR_TO_DATE('12-10-2023', '%d-%m-%Y'), 12);
+
+to extract day,month,year of a date type:
+-----------------------------------------
+select day(product_date) as day,month(product_date) as month,year(product_date) as year from products;
+
+working filter with case insensitive so to make case sensitive :
+---------------------------------------------------------------
+SELECT * FROM products 
+WHERE product_name COLLATE utf8mb4_bin = 'pen';
+
+Altering column type to work case-insesitive:
+---------------------------------------------
+ALTER TABLE products 
+MODIFY COLUMN product_name VARCHAR(255) COLLATE utf8mb4_bin;
+
+to create a copy of table:
+--------------------------
+create table prod_bkp as select * from products;
+
+without content give some dummy condition which gives false:
+-------------------------------------------------------------
+create table prod_bkp as select * from products where 1=2;
+
+modify primark key constraint:
+------------------------------
+first drop the existing column :
+ALTER TABLE products drop column product_id;
+
+then add as new column:
+ALTER TABLE products add COLUMN product_id INT AUTO_INCREMENT PRIMARY KEY;
+
+create a table with primary key constraint:
+-------------------------------------------
+create table demo_pk(id int primary key);
+create table demo_pk_3(id int auto_increment,name varchar(20),constraint pk PRIMARY KEY(id));
+
+
+# Write your MySQL query statement below
+select name,coalesce(sum(distance),0) as travelled_distance
+from rides r
+right join users u on u.id=r.user_id
+group by user_id
+order by travelled_distance desc,name asc;
+
+
+# Write your MySQL query statement below
+select e.employee_id 
+from employees e
+left join salaries s 
+on e.employee_id=s.employee_id
+where s.employee_id is null
+union
+select s.employee_id 
+from employees e
+right join salaries s 
+on e.employee_id=s.employee_id
+where e.employee_id is null
+order by employee_id;
+
+
+# Write your MySQL query statement below
+select name,bonus
+from employee e
+left join bonus b on e.empId=b.empId 
+where b.bonus<1000 or bonus is null;
+
+
+# Write your MySQL query statement below
+select name from customer where referee_id <> 2 or referee_id is null;
+
+# Write your MySQL query statement below
+select customer_number
+from orders
+group by customer_number
+order by count(*) desc limit 1;
+
+
+
+# Write your MySQL query statement below
+select employee_id
+from employees where salary<30000 and manager_id not in (select employee_id from employees)
+order by employee_id
+
+
+# Write your MySQL query statement below
+select class
+from courses
+group by class 
+having count(*) >= 5 
+
+select sell_date,count(distinct product) as num_sold,group_concat(distinct product) as products
+from activities 
+group by sell_date
+
+
+select name from salesperson where name not in (
+select sp.name
+from orders o
+join salesperson sp on o.sales_id=sp.sales_id
+join company c on c.com_id=o.com_id
+where c.name="RED")
+
+# Write your MySQL query statement below
+select max(num) as num 
+from mynumbers where num in(
+select num from mynumbers
+group by num
+having count(*)=1
+)
+if zero rows returned we will get null row here
+
+
+select * from users where mail regexp '^[a-zA-Z][A-Za-z0-9._-]*@leetcode\\.com$'
+^[a-zA-Z] - start with alphabet
+[A-Za-z0-9._-]* - these characters any number of times 
+@leetcode\\.com$ - ending with leetcode.com
+
+
+select project_id,round(avg(experience_years),2) as average_years
+from project p
+join employee e on p.employee_id=e.employee_id
+group by p.project_id
+round of to 2 digits using round(avg(exp),2)
+
+delete duplicate emails:
+DELETE p1 
+FROM person p1,person p2 WHERE p1.Email = p2.Email AND p1.Id > p2.Id
+
+
+how to compare 2 rows of same table it is for checking the previous day temparature is smaller than current day 
+# Write your MySQL query statement below
+select w2.id
+from weather w1
+join weather w2 on datediff(w1.recordDate,w2.recordDate)=-1
+where w1.temperature<w2.temperature
+
+regex expression to match email format:
+# Write your MySQL query statement below
+select * from users where email regexp '^[a-zA-Z0-9]*@[a-zA-Z]*\\.com$'
+
+
+# Write your MySQL query statement below
+SELECT id,
+sum(if(month='Jan',revenue,null)) as Jan_Revenue,
+sum(if(month='Feb',revenue,null)) as Feb_Revenue,
+sum(if(month='Mar',revenue,null)) as Mar_Revenue,
+sum(if(month='Apr',revenue,null)) as Apr_Revenue,
+sum(if(month='May',revenue,null)) as May_Revenue,
+sum(if(month='Jun',revenue,null)) as Jun_Revenue,
+sum(if(month='Jul',revenue,null)) as Jul_Revenue,
+sum(if(month='Aug',revenue,null)) as Aug_Revenue,
+sum(if(month='Sep',revenue,null)) as Sep_Revenue,
+sum(if(month='Oct',revenue,null)) as Oct_Revenue,
+sum(if(month='Nov',revenue,null)) as Nov_Revenue,
+sum(if(month='Dec',revenue,null)) as Dec_Revenue
+FROM Department
+GROUP BY id
+
+
+cross_join study about it
+
+WITH CTE AS (
+    SELECT *,
+        CASE
+            WHEN income < 20000 THEN 'Low Salary'
+            WHEN income BETWEEN 20000 AND 50000 THEN 'Average Salary'
+            WHEN income > 50000 THEN 'High Salary'
+        END AS category
+    FROM Accounts
+)
+
+SELECT 'Low Salary' AS category, (SELECT COUNT(*) FROM CTE WHERE category = 'Low Salary') AS accounts_count
+UNION
+SELECT 'Average Salary', (SELECT COUNT(*) FROM CTE WHERE category = 'Average Salary')
+UNION
+SELECT 'High Salary', (SELECT COUNT(*) FROM CTE WHERE category = 'High Salary')
+;
+
+
+select name,salary,departmentId,first_value(salary) over(partition by departmentId order by salary desc) as dept from employee
+
+
+with cte as (
+    select num,
+    lead(num,1) over() num1,
+    lead(num,2) over() num2
+    from logs
+
+)
+
+select distinct num ConsecutiveNums from cte where (num=num1) and (num=num2)
+
+
+
+CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+SET N=N-1;
+  RETURN (
+    -- select salary from
+    --  (select distinct salary,dense_rank() over(order by salary desc) as rank_number from employee) sub where rank_number=N
+    select distinct salary from Employee order by salary desc limit 1 offset N
+  );
+END
+
+-- select distinct nth_value(salary,2) over(order by salary desc) as high_salary from employee
+
+with emp_salary as(
+select name,salary,departmentId, dense_rank() over(partition by departmentId order by salary desc) as 'dense_rank'
+from employee
+)
+select d.name as 'Department',e.name as 'Employee',salary as 'Salary'
+from emp_salary e
+join department d on d.id=e.departmentId
+where e.dense_rank < 4

@@ -1,0 +1,17 @@
+Kafka and Zookeeper:
+Start zookeeper first with command : 
+		bin\windows\zookeeper-server-start.bat config\zookeeper.properties
+Start Kafka with command : 
+		bin\windows\kafka-server-start.bat config\server.properties
+Start creating topic with the following command : (tpoic name i given was supriya-topic)
+		bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --topic supriya-topic --partitions 3 --replication-factor 1
+List all topics using command :
+		bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --list
+Describe topics using command :
+		bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --describe --topic supriya-topic
+Producing data using command :
+		bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic supriya-topic
+Consuming data using command :
+		bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic supriya-topic --from-beginning
+Producing data from csv file :
+		bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic supriya-topic < C:\Users\Supriya_Divvela\Downloads\MyCertificationDetails.csv
