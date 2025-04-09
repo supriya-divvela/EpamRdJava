@@ -1,0 +1,175 @@
+List<Employee> employees = Arrays.asList(
+            new Employee("Alice", Arrays.asList("HR", "Finance")),
+            new Employee("Bob", Arrays.asList("IT", "Finance")),
+            new Employee("Charlie", Arrays.asList("HR", "IT"))
+        );
+
+        // Creating a map where each department contains a list of employee names
+        Map<String, List<String>> departmentEmployeesMap = employees.stream()
+            .flatMap(employee -> employee.getDepartments().stream()
+                .map(department -> new AbstractMap.SimpleEntry<>(department, employee.getName())))
+            .collect(Collectors.groupingBy(
+                Map.Entry::getKey,
+                Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+            ));
+
+        // Printing the map
+        departmentEmployeesMap.forEach((department, names) -> 
+            System.out.println("Department: " + department + ", Employees: " + names)
+        );
+ List<Employee> employees = Arrays.asList(
+            new Employee("Alice", Arrays.asList("HR", "Finance")),
+            new Employee("Bob", Arrays.asList("IT", "Finance")),
+            new Employee("Charlie", Arrays.asList("HR", "IT"))
+        );
+
+        // Creating a map where each department contains a list of employee names
+        Map<String, List<String>> departmentEmployeesMap = employees.stream()
+            .flatMap(employee -> employee.getDepartments().stream()
+                .map(department -> new AbstractMap.SimpleEntry<>(department, employee.getName())))
+            .collect(Collectors.groupingBy(
+                Map.Entry::getKey,
+                Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+            ));
+
+        // Printing the map
+        departmentEmployeesMap.forEach((department, names) -> 
+            System.out.println("Department: " + department + ", Employees: " + names)
+        );
+
+
+
+
+even or odd:
+=============
+Arrays.asList(1,2,3,4).stream().filter(i->i%2==0).forEach(System.out::println);
+filter numbers start with 1:
+============================
+Arrays.asList(1,2,3,4).stream().map(i->i+"").filter(i->i.startsWith("1")).forEach(System.out::println); op:1[]
+find duplicate elements in list:
+=================================
+Set<Integer> set=new HashSet<>();
+System.out.println(Arrays.asList(1,2,2,33,4,5,65,23,2,2,3,43,33,4,5,8).stream().filter(i->!set.add(i)).collect(Collectors.toSet()));
+generate 100 random numbers in range 1,10:
+==========================================
+new Random().ints(100,1,10).forEach(System.out::println);
+find max number using max():
+============================
+System.out.println(Arrays.asList(1,2,34,4,5,6,6).stream().sorted().reduce(0,(a,b)->b));
+System.out.println(Arrays.asList(1,2,34,4,5,6,6).stream().max(Comparator.comparing(Integer::valueOf)).get());
+System.out.println(Arrays.asList(1,2,3,4,4,5,6,2,3,1,4).stream().sorted(Collections.reverseOrder()).findFirst().get()); op:6
+find min number using min():
+============================
+System.out.println(Arrays.asList(1,2,34,4,5,6,6).stream().sorted(Collections.reverseOrder()).reduce(0,(a,b)->b));
+System.out.println(Arrays.asList("hello","hai","java").stream().min(Comparator.comparing(String::length)).get());
+System.out.println(Arrays.asList(1,2,34,4,5,6,6).stream().min(Comparator.comparing(Integer::valueOf)).get());
+System.out.println(Arrays.asList(1,2,3,4,4,5,6,2,3,1,4).stream().sorted().findFirst().get());
+concat 2 arraylist:
+===================
+Stream.concat(Arrays.asList(1,2,3).stream(), Arrays.asList(1,2,3).stream()).forEach(System.out::println);
+find unique elements:
+=====================
+List<Integer> list=Arrays.asList(1,2,2,33,4,5,65,23,2,2,3,43,33,4,5,8);
+System.out.println(list.stream().filter(i->Collections.frequency(list,i)==1).collect(Collectors.toList()));
+String reverse:
+===============
+String s="supriya";
+System.out.println("hiiiiokok".chars().mapToObj(i->(char)i+"").reduce("",(a,b)->b+a));
+IntStream.range(0, "supriya".length()).mapToObj(i->"supriya".charAt("supriya".length()-i-1)+"").forEach(System.out::print);
+Stream.iterate(s.length() - 1, n -> n >= 0, n -> n - 1).map(str::charAt).forEach(System.out::print);
+remove unknown chars:
+=======================
+String s="@#$%^&*()(*&^HJHCVB         NMHGSwerty12     345678gv%^&*(^%#$vDgV#$%";
+String s1=s.replaceAll("[^a-zA-Z0-9]","");
+System.out.println(s1); //op:HJHCVBNMGSwerty12345678
+Map:
+===
+Map<Integer,String> map=new HashMap<>();
+		map.put(1, "hi");
+		map.put(2, "ok");
+		map.put(-3,"nul");
+		map.put(12, "ok");
+iterators in map:
+================
+Set<Integer> set=map.keySet();
+Iterator<Integer> it=set.iterator();
+while(it.hasNext()) {
+			System.out.println(it.next());
+}
+map.entrySet().stream().forEach(entry->System.out.println(entry.getKey()+" "+entry.getValue()));
+Collecting maps:
+================
+Map<Integer,String> map1=map.entrySet().stream().sorted((entry1,entry2)->entry1.getValue().compareTo(entry2.getValue())).collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(e1, e2) -> e2,LinkedHashMap::new));
+sort ascending based on keys:
+=============================
+map.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry->System.out.println(entry.getKey()+" "+entry.getValue()));
+sort ascending based on values:
+===============================
+map.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(entry->System.out.println(entry.getKey()+" "+entry.getValue()));
+sort descending based on keys:
+==============================
+map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByKey())).forEach(entry->System.out.println(entry.getKey()+" "+entry.getValue()));
+sort descending based on values:
+================================
+map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).forEach(entry->System.out.println(entry.getKey()+" "+entry.getValue()));
+generate 30 numbers:
+====================
+IntStream.range(1, 30).boxed().forEach(System.out::print);
+remove duplicates:
+==================
+Arrays.asList(1,2,3,4,4,5,6,2,3,1,4).stream().distinct().forEach(System.out::println);
+get count of each number:
+=========================
+System.out.println(Arrays.asList(1,2,3,4,4,5,6,2,3,1,4).stream().collect(Collectors.groupingBy(Function.identity(),Collectors.counting())));
+get sum of elements:
+====================
+System.out.println(Arrays.asList(1,2,3,4,4,5,6,2,3,1,4).stream().mapToInt(i->i).sum());
+get average of elements:
+========================
+System.out.println(Arrays.asList(1,2,3,4,4,5,6,2,3,1,4).stream().mapToInt(i->i).average().getAsDouble());
+get all statictics:
+===================
+IntSummaryStatistics stats = Arrays.asList(1,2,3,4,5).stream().mapToInt((x) -> x).summaryStatistics();
+System.out.println("Highest number in List : " + stats.getMax());
+System.out.println("Lowest number in List : " + stats.getMin());
+System.out.println("Sum of all numbers : " + stats.getSum());
+System.out.println("Average of all numbers : " + stats.getAverage());
+System.out.println("Count of all numbers : " + stats.getCount());
+Join Strings with , :
+======================
+System.out.println(Arrays.asList("hell","hii","ooj").stream().collect(Collectors.joining(","))); op:hell,hii,ooj
+System.out.println(Arrays.asList("hell","hii","ooj").stream().collect(Collectors.joining(",","[","]"))); op:[hell,hii,ooj]
+building stream of strings:
+===========================
+Stream.of("a", "b", "c").forEach(System.out::println);
+Stream.builder().add("a").add("b").build().forEach(System.out::println);
+generating any string:
+======================
+Stream.generate(() -> "element").limit(10).forEach(System.out::println);
+
+
+
+class newthread extends Thread
+    {
+	Thread t;
+	newthread()
+        {
+	    t1 = new Thread(this,"Thread_1");
+	    t2 = new Thread(this,"Thread_2");
+	    t1.start();
+	    t2.start();
+	}
+	public void run()
+        {
+	    t2.setPriority(Thread.MAX_PRIORITY);	
+	    System.out.print(t1.equals(t2));
+        }    
+    }
+    class multithreaded_programing
+    {
+        public static void main(String args[])
+            {
+                new newthread();        
+            }
+    }
+

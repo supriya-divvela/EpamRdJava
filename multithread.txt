@@ -1,0 +1,141 @@
+package com.epam.interview;
+ 
+public class EvenOddMultipleThreads implements Runnable {
+    private static final Object lock = new Object();
+    private static int num = 1; // Shared counter
+    private final int limit;
+    private final int remainder;
+ 
+    public EvenOddMultipleThreads(int limit, int remainder) {
+        this.limit = limit;
+        this.remainder = remainder;
+    }
+ 
+    @Override
+    public void run() {
+        while (num <= limit) {
+            synchronized (lock) {
+                while (num % 3 != remainder) { // Check if it's this thread's turn
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                
+                if (num > limit) return; // Prevent extra prints
+ 
+                System.out.println(Thread.currentThread().getName() + ": " + num);
+                num++;
+                
+                lock.notifyAll(); // Notify all waiting threads
+            }
+        }
+    }
+ 
+    public static void main(String[] args) {
+        int limit = 20; // Change this as needed
+ 
+        Thread oddThread = new Thread(new EvenOddMultipleThreads(limit, 1), "OddThread");
+        Thread evenThread = new Thread(new EvenOddMultipleThreads(limit, 2), "EvenThread");
+        Thread multipleOfThreeThread = new Thread(new EvenOddMultipleThreads(limit, 0), "MultipleOfThreeThread");
+ 
+        oddThread.start();
+        evenThread.start();
+        multipleOfThreeThread.start();
+    }
+}
+
+
+package com.epam.interview;
+ 
+public class EvenAndOddUsingThreads implements Runnable {
+	private static final Object lock = new Object();
+	private int limit;
+	private int i = 1;
+	public EvenAndOddUsingThreads(int limit) {
+		this.limit=limit;
+	}
+	@Override
+	public void run() {
+		while (i < limit) {
+			while (i % 2 == 0 && Thread.currentThread().getName().equals("even")) {
+				synchronized (lock) {
+					System.out.println("even" + " " + i);
+					i++;
+					try {
+						lock.wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			while (i % 2 != 0 && Thread.currentThread().getName().equals("odd")) {
+				synchronized (lock) {
+					System.out.println("odd" + " " + i);
+					i++;
+					lock.notify();
+				}
+			}
+		}
+	}
+ 
+	public static void main(String[] args) {
+		EvenAndOddUsingThreads r = new EvenAndOddUsingThreads(10);
+		Thread t1 = new Thread(r, "even");
+		Thread t2 = new Thread(r, "odd");
+		t1.start();
+		t2.start();
+	}
+ }
+ 
+ 
+ package com.epam.interview;
+ 
+public class EvenAndOddUsingThreads {
+	private int num = 1;
+	private final int limit;
+ 
+	public EvenAndOddUsingThreads(int limit) {
+		this.limit = limit;
+	}
+ 
+	public synchronized void printOdd() {
+		while (num < limit) {
+			while (num % 2 == 0) { // Wait if it's not odd
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			System.out.println("Odd: " + num);
+			num++;
+			notify(); // Notify the even thread
+		}
+	}
+ 
+	public synchronized void printEven() {
+		while (num <= limit) {
+			while (num % 2 != 0) { // Wait if it's not even
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			System.out.println("Even: " + num);
+			num++;
+			notify(); // Notify the odd thread
+		}
+	}
+ 
+	public static void main(String[] args) {
+		EvenAndOddUsingThreads printer = new EvenAndOddUsingThreads(10); // Print numbers up to 10
+ 
+		Thread t1 = new Thread(printer::printOdd);
+		Thread t2 = new Thread(printer::printEven);
+ 
+		t1.start();
+		t2.start();
+	}

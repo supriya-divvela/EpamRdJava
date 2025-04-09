@@ -1,0 +1,59 @@
+#!/bin/sh
+yum update -y
+yum install httpd -y
+service httpd start
+yum install docker -y
+service docker start
+aws s3 cp s3://demo-bucket-pro/demo.tar demo-ec2.tar
+docker load -i demo-ec2.tar
+docker run -m 1g -p 1001:1000 demo-image
+
+broker:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: broker
+    ports:
+      - 9091:9092
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092,PLAINTEXT_INTERNAL://broker:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+	  
+	  
+Create network
+==================
+docker network create golden-network
+
+Run sql instance
+================
+docker run --name goldendb --network golden-network -e MYSQL_ROOT_PASSWORD=epam -e MYSQL_USER=user -e MYSQL_PASSWORD=epam -e MYSQL_DATABASE=goldcertificateassessment -d mysql:latest
+
+Check status
+=============
+docker ps
+
+bed4eb6ac3266bf3b17c8367c37d47779878180f369cc4af130fcc14796c98e4
+
+Check logs
+==============
+docker logs bed
+
+Check application.properties and change hostname and remove port num
+====================================================================
+Mvn clean install
+
+Build image
+==============
+docker build -t goldenimage .
+
+Run spring boot image
+==========================
+docker run --name golden-container --network golden-network -p 8020:8080 goldenimage
+
+
+docker run -e MYSQL_ROOT_PASSWORD=yourpassword -d mysql:5.7.43

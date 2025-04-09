@@ -1,0 +1,415 @@
+beans scopes and life cycles
+
+RestTemplate | FeignClient | WebClient With Spring Boot
+
+server.port=8761
+spring.application.name=eureka-server
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false
+eureka.instance.hostname=localhost
+
+
+Employee e1=new Employee();
+System.out.println(e1);
+System.out.println((Employee)e1.clone());
+System.out.println((Employee)Class.forName("com.epam.Employee").newInstance());
+System.out.println(Employee.class.getConstructor().newInstance());
+System.out.println(Employee.class.getDeclaredConstructor().newInstance());
+System.out.println(Employee.class.newInstance());
+
+
+Converting Integer to Int - i.intValue()
+Converting Int to Integer - Integer.valueOf(i)
+Converting String to Int - Integer.parseInt(i)
+Converting String to Integer - Integer.valueOf(i)
+Converting Int to String - Integer.toString(i)
+Converting Int to String - String.valueOf(i)
+ 
+<build>
+		<finalName>gtmapi</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>*.properties</exclude>
+				</excludes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+	</build>
+	
+
+1.protected modifier
+2.super keyword
+3.early binding vs late binding
+4.Hash map vs Hash Table
+5.type of collection to be used for a telephone directory for name and number
+6.how many ways we can create an object
+7.toString() 
+8.dev tools
+9.LinkedHashMap
+10.Vector
+11.How multiple inheritance can be achieved
+12.Profile
+13.DRY,KISS
+14.spring actuator
+15.@RestControllerAdvice
+16.Junit test cases
+17.For update operations - ArrayList or LinkedList
+18.shallow copy and deep copy
+19.SOLID principles
+20.write signature of all request mappings
+21.How can we achieve loadbalancing
+22.Eureka purpose
+23.remove duplicates in a list, java8 - Given a list of strings with duplicates - Display strings with frequencies
+24.Difference btw throw and throws keyword
+25.Is using throws a best practise
+26.super class of Exception and Error
+
+
+@Test
+    void testAddBatch() throws JsonProcessingException, Exception {
+        when(batchService.addBatch(batchDto)).thenReturn(batchDto);
+        mockMvc.perform(post("/batch").contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(batchDto))).andExpect(status().isCreated());
+    }
+@Test
+void testGetAllBatches() throws Exception {
+ List<BatchDto> batches = new ArrayList<>();
+ when(batchService.getAllBatches()).thenReturn(batches); mockMvc.perform(get("/batch").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+}
+@Test
+void testGetBatch() throws Exception {
+when(batchService.getBatch(1)).thenReturn(batchDto);		mockMvc.perform(get("/batch/1").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());}
+@Test
+	void testDeleteBatch() throws JsonProcessingException, Exception {
+		doNothing().when(batchService).deleteBatch(1);
+		mockMvc.perform(delete("/batch/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNoContent());
+	}
+ 
+	@Test
+	void testUpdateBatch() throws JsonProcessingException, Exception {
+		when(batchService.updateBatch(1, batchDto)).thenReturn(batchDto);
+		mockMvc.perform(put("/batch/{id}", 1).contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(batchDto))).andExpect(status().isOk());
+	}
+	
+
+spring.datasource.url=jdbc:mysql://localhost:3306/assesmentdb
+spring.datasource.username=root
+spring.datasource.password=root
+spring.jpa.hibernate.ddl-auto = update
+spring.datasource.driver-class-name= com.mysql.jdbc.Driver
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+
+
+mvn compile- all java files under src/main converted into .class files and stores in target/classes folder in mvn project
+mvn test-compile - all java files under src/test converted into .class files and stores in target/test-classes in mvn project
+mvn test - run all test cases and generate .class files if they are not present
+mvn test -DTest=TestCaseClassName runs all test classes with that class name even they are present in different package name
+mvn test -DTest=packagename.* - to run all test case under that package
+mvn test -DTest=packagename.classname - to run specific class under that package
+mvn package or mvn install -used to generate jar files
+mvn clean - to refresh project
+mvn clean install - cleans and then generate jar files
+
+
+
+The DispatcherServlet contacts HandlerMapping to call the appropriate Controller for processing the request on receiving it. Then, the controller calls appropriate service methods to set or process the Model data. The service processes the data and returns the view name to DispatcherServlet. DispatcherServlet then takes the help of ViewResolver and picks up the defined view for the request. Once the view is decided, the DispatcherServlet passes the Model data to View where it is finally rendered on the browser.
+
+
+
+Object-relational mapping (ORM) is the phenomenon of mapping application domain model objects to the relational database tables and vice versa.
+Hibernate is the most commonly used java based ORM framework.
+
+Spring Actuator – Spring boot uses actuator to provide “Management EndPoints” which helps the developer in going through the Application Internals, Metrics etc.
+
+
+no: This means no autowiring and is the default setting. An explicit bean reference should be used for wiring.
+byName: The bean dependency is injected according to the name of the bean. This matches and wires its properties with the beans defined by the same names as per the configuration.
+byType: This injects the bean dependency based on type.
+constructor: Here, it injects the bean dependency by calling the constructor of the class. It has a large number of parameters.
+autodetect: First the container tries to wire using autowire by the constructor, if it isn't possible then it tries to autowire by byType.
+
+
+
+Maven Build Phases:
+Validate: This step validates if the project structure is correct. For example – It checks if all the dependencies have been downloaded and are available in the local repository.
+Compile: It compiles the source code, converts the .java files to .class, and stores the classes in the target/classes folder.
+Test: It runs unit tests for the project.
+Package: This step packages the compiled code in a distributable format like JAR or WAR.
+Integration test: It runs the integration tests for the project.
+Verify: This step runs checks to verify that the project is valid and meets the quality standards.
+Install: This step installs the packaged code to the local Maven repository.
+Deploy: It copies the packaged code to the remote repository for sharing it with other developers.
+
+
+The Spring Framework has five scope supports. They are:
+Singleton: The scope of bean definition while using this would be a single instance per IoC container.
+Prototype: Here, the scope for a single bean definition can be any number of object instances.
+Request: The scope of the bean definition is an HTTP request.
+Session: Here, the scope of the bean definition is HTTP-session.
+Global-session: The scope of the bean definition here is a Global HTTP session.
+Note: The last three scopes are available only if the users use web-aware ApplicationContext containers.
+
+
+In constructor injection, partial injection is not allowed whereas it is allowed in setter injection.
+The constructor injection doesn’t override the setter property whereas the same is not true for setter injection.
+Constructor injection creates a new instance if any modification is done. The creation of a new instance is not possible in setter injection.
+In case the bean has many properties, then constructor injection is preferred. If it has few properties, then setter injection is preferred.
+
+
+
+Portlet means Portlets process requests and generate responses like any other web application
+
+
+Differences:
+Single,distributed
+Not scalable,scalable
+Have single database,has each db for each application
+Large application takes deployment more time,as less compared to monolithic
+Tightly couple, loosely coupled based on architecture
+
+
+
+Advantages of microservices:
+Dividing project into small projects
+They can use technology as they wish in different projects
+Independent deployment
+Independent scalability
+Fault tolerance
+Load balancing
+Distributed
+Disadvantages of microservices:
+Testing microservices is very complex than monolithic
+Deploying each instance of microservice application is also a
+Complex task
+
+
+
+Advantages of Monolithic:
+Communication costs
+Reusability
+Efforts
+Disadvantages of Monolithic:
+Fault tolerance
+Scalability
+Modularity
+Big database
+
+
+@Test
+    void testUpdateBatch() throws JsonProcessingException, Exception {
+        when(batchService.updateBatch(1, batchDto)).thenReturn(batchDto);
+        mockMvc.perform(put("/batch/{id}", 1).contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(batchDto))).andExpect(status().isOk());
+    }
+	
+	
+@Test
+    void testDeleteBatch() throws JsonProcessingException, Exception {
+        doNothing().when(batchService).deleteBatch(1);
+        mockMvc.perform(delete("/batch/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+
+@Test
+    void testGetAllBatches() throws Exception {
+        List<BatchDto> batches = new ArrayList<>();
+        when(batchService.getAllBatches()).thenReturn(batches);
+        mockMvc.perform(get("/batch").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+    }
+
+
+@Test
+    void testGetBatch() throws Exception {
+        when(batchService.getBatch(1)).thenReturn(batchDto);
+        mockMvc.perform(get("/batch/1").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+    }
+	
+
+@Test
+    void testAddBatch() throws JsonProcessingException, Exception {
+        when(batchService.addBatch(Mockito.any(BatchDto.class))).thenReturn(batchDto);
+        mockMvc.perform(post("/batch").contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(batchDto))).andExpect(status().isCreated());
+    }
+	
+The thread which is managed by jvm with the help of underlying os is called native os model
+The thread which is managed completely by jvm without underlying os support is called green method
+By default mian thread is non daemon which will be inherited from parent to child
+The thread which is executing in background is called daemon thread.the main objective is to provide support for non daemon threads.if main thread runs with low priority then jvm runs garbage collector so that no of bytes of free memory will be improved
+
+
+Pull
+Fetch
+Merge
+Statsh
+Add
+Merge conflicts
+
+MVC pattern
+Dispatcher servlet
+Handler mapping
+View resolver
+Rest controller
+
+Design principles dry kiss yagni solid
+ 
+Design patterns singleton factory builder decorator strategy 
+ 
+ORM
+ 
+ 
+Aggregation : When an object A contains a reference to another object B or we can say Object A has a HAS-A relationship with Object B, then it is termed as Aggregation. Aggregation helps in reusing the code. Object B can have utility methods and which can be utilized by multiple objects.
+Composition : Composition in java is the design technique to implement has-a relationship in classes. We can use java inheritance or Object composition in java for code reuse
+
+Association : Association, in general terms, refers to the relationship between any two entities. Association in java is the relationship that can be established between any two classes. These relationships can be of four types: One-to-One relation. One-to-many relation.
+ 
+JDK is a core component of Java Environment and provides all the tools, executables and binaries required to compile, debug and execute a Java Program.
+JVM is responsible to converting bytecode to the machine specific code. JVM is also platform dependent and provides core java functions like garbage collection, memory management, security etc.
+JRE is the implementation of JVM, it provides platform to execute java programs.
+JIT optimizes bytecode to machine specific language code by compiling similar bytecodes at the same time. This reduces overall time taken for compilation of bytecode to machine specific language.
+ 
+The Java source file contains a header that declares the type of class or interface, its visibility with respect to other classes, its name and any superclass it may extend, or interface it implements.
+Interpreters read high level language (interprets it) and execute the program. Interpreters are normally not passing through byte-code and jit compilation.
+ 
+Class.getInstance creates object if class does not have any constructor
+ 
+A new object is always created in young space. Once young space is full, a special young collection is run where objects which have lived long enough are moved to old space and memory is freed up in young space for new objects.
+ 
+ 
+ 
+ 
+ 
+Monolithic Disadvantages:
+Monolithic applications are designed, developed, and deployed as a single unit.
+Monolithic applications are overwhelmingly complex; this leads to nightmares in maintaining, upgrading, and adding new features.
+It is difficult to practice agile development and delivery methodologies with Monolithic architecture.
+It is required to redeploy the entire application in order to update a part of it.
+The application has to be scaled as a single unit, making it difficult to manage conflicting resource requirements (e.g. one service requires more CPU, while the other requires more memory)
+One unstable service can bring the whole application down.
+It's really difficult to adopt new technologies and frameworks, as of all the functionalities have to build on homogeneous technologies/frameworks.
+ 
+API-GW style gives you the following advantages:
+Ability to provide the required abstractions at the gateway level for the existing microservices. For example, rather than provide a one-size-fits-all style API, the API gateway can expose a different API for each client.
+Lightweight message routing/transformations at gateway level.
+Central place to apply non-functional capabilities such as security, monitoring and throttling.
+With the use of API-GW pattern, the microservice becomes even more lightweight as all the non-functional requirements are implemented at the Gateway level.
+ 
+ 
+ Immutable Objects:
+Don't provide "setter" methods — methods that modify fields or objects referred to by fields.
+Make all fields final and private.
+Don't allow subclasses to override methods. The simplest way to do this is to declare the class as final. A more sophisticated approach is to make the constructor private and construct instances in factory methods.
+If the instance fields include references to mutable objects, don't allow those objects to be changed:
+Don't provide methods that modify the mutable objects.
+Don't share references to the mutable objects. Never store references to external, mutable objects passed to the constructor; if necessary, create copies, and store references to the copies. Similarly, create copies of your internal mutable objects when necessary to avoid returning the originals in your methods.
+
+
+
+HttpHead operation
+ 
+headforHeaders() is a RestTemplate class method based on HTTP protocol request methods.
+ 
+Log4J also has the following logging levels:
+
+fatal, error, warn, info, debug, and trace. fatal is the most severe.
+ 
+@Resource tag it is same as qualifier annotation but qualifier is from spring but resource is from jakarta
+ 
+JDK is a core component of Java Environment and provides all the tools, executables and binaries required to compile, debug and execute a Java Program.
+ 
+Which exception is thrown when java is out of memory? OutOfMenoryError
+ 
+ 
+different scopes of maven:
+The <scope> element can take 6 values: compile, provided, runtime, test, system and import. This scope is used to limit the transitivity of a dependency, and also to affect the classpath used for various build tasks. This is the default scope, used if none is specified.
+ 
+#close will shutdown right away, and #registerShutdownHook will shutdown just before the JVM will exit
+ 
+
+
+Features of java from java 8 to jdk 15:
+Java 8: Streams,Optional,lambda, functional interfaces
+Java 9: Jshell for executing java code as javascript in shell and factory methods for immutable collection such as Arrays.asList() and List.of() for creating list...etc
+Java 10: var keyword to initialise any type of object
+Java 12: new type of switch with lambda came in java 12
+Java 13: multiline string such as taking json format in form of string
+Java 14:Record keyword used to remove boiler plate code in pojo so that it can inbuilt provide getters setters equals and hashcode, constructor and instance of can create a variable there itself to access any object instead of conversions
+Java 15:Sealed keyword which restricts it's implementation to particular classes itself
+
+
+What is portlet?
+Difference between request and session
+
+
+annotations
+beanfactories
+spring bean life cyle methods
+bean post processor - methods
+profiles dynamically
+aware interfaces
+spring controller annotation
+
+
+toArray()
+collect()
+count()
+reduce()
+forEach()
+forEachOrdered()
+min()
+max()
+anyMatch()
+allMatch()
+noneMatch()
+findAny()
+findFirst()
+
+
+1. Differenec b/w user thread and daemon thread ?
+2. What is copy on write array list ? (fail safe and fail fast)
+3. Which is fast ConcurrentHashMap and SynchronisedMap ?
+4. Diff b/w stream and parallel stream ?
+5. Predefined Functional Interfaces ? and What is BiConsumer ?
+6. What is Method Reference ? How to call method reference ?
+7. What is CompletableFuture ?
+
+
+Multithreading
+ 
+Difference between processs and thread?
+ 
+multiple threads accessing same arrayList at a time?
+ 
+Synchornised collection-> Concurrent Modification Exception?
+ 
+linkedhashset ?
+ 
+Metaspace and permgen?
+ 
+what are the terminal operations and intermeddiate operations and its purpose?
+ 
+difference between optional.of() and optional.ofNullable()?
+
+
+Collect()
+Reduce()
+Count()
+Min()
+Max()
+Any match()
+Ninematch()
+All match()
+For each()
+[5/10, 10:47] Supriya Divvela: Intermediate
+Sorted()
+Distinct()
+Limit()
+Skip()
+Peek()
+Filter()
+Map()
